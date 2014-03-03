@@ -3,10 +3,6 @@
     with_items:
       - httpd
       - php
-      - mc
-      - vim
-      - telnet
-      - git
 
   - name: ensure Apache is running and starts on boot
     service: name=httpd state=started enabled=yes
