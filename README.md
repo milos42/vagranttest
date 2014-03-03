@@ -14,10 +14,12 @@ what you need
   - ansible installed
 
 install the code:
-    git clone https://github.com/milos42/vagranttest
-
-and run the following 
 ```bash
+git clone https://github.com/milos42/vagranttest
+```
+
+then run the following 
+```
 cd vagrantest
 vagrant up
 ansible-playbook site.yml -i hosts
@@ -28,8 +30,9 @@ vagrant ssh db1
 vagrant ssh db2
 ```
 run the following on each db host:
-    /usr/local/bin/sbtest.sh
-
+```
+/usr/local/bin/sbtest.sh
+```
 ....wait....
 
 point your browser to:
