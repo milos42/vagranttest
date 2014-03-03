@@ -17,7 +17,7 @@ install the code:
     git clone https://github.com/milos42/vagranttest
 
 and run the following 
-```
+```bash
 cd vagrantest
 vagrant up
 ansible-playbook site.yml -i hosts
