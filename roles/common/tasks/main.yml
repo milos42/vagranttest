@@ -1,0 +1,3 @@
+  - name: ensure iptables is down
+    service: name=iptables state=stopped enabled=no
+

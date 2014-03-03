@@ -1,0 +1,62 @@
+  - name: Check if the repo already exists
+    stat: path=/home/vagrant/RainGauge
+    register: check_rg_path
+
+  - name: clone repo //github.com/box/RainGauge.git
+    command: git clone git://github.com/box/RainGauge.git
+    when: check_rg_path.stat.exists == false
+
+  - name: install the collecting script "raingauge_package_and_send.sh" for Rain Gauge
+    command: cp /home/vagrant/RainGauge/scripts/raingauge_package_and_send.sh /usr/bin/
+  - name: install the collecting script "pt-stalk-raingauge" for Rain Gauge
+    command: cp /home/vagrant/RainGauge/scripts/pt-stalk-raingauge /usr/bin/
+
+  - name: set permission for "raingauge_package_and_send.sh"   
+    action: file path=/usr/bin/raingauge_package_and_send.sh owner=root group=root mode=0755
+
+  - name: set permission for "pt-stalk-raingauge"   
+    action: file path=/usr/bin/pt-stalk-raingauge owner=root group=root mode=0755
+
+  - name: cofigure raingauge_package_and_send.sh
+    lineinfile: dest=/usr/bin/raingauge_package_and_send.sh
+      state=present
+      regexp='^SERVER.*'
+      insertafter='^#gempa'
+      line='SERVER="{{ rg_host }}"'
+
+  - name: Create Rain Gauge user with ALL privileges on ALL databases
+    command: mysql -u root -e "GRANT PROCESS,SUPER on *.* to 'raingauge'@'localhost' IDENTIFIED by '{{ rg_password }}'"
+
+  - name: install the service script "raingauge_rc" for Rain Gauge
+    command: cp /home/vagrant/RainGauge/scripts/raingauge_rc /etc/raingauge_rc
+
+  - name: set permission for "raingauge_rc"
+    action: file path=/etc/raingauge_rc owner=root group=root mode=0755
+
+  - name: install the service script "raingauge_service" for Rain Gauge
+    command: cp RainGauge/scripts/raingauge_service /etc/init.d/raingauge
+
+  - name: set permission for "raingauge_service"
+    action: file path=/etc/init.d/raingauge_service owner=root group=root mode=0755
+
+  - name: configure MySQL pass in /etc/raingauge_rc
+    lineinfile: dest=/etc/raingauge_rc
+      state=present
+      regexp='^PT_MYSQL_PASS.*'
+      line="PT_MYSQL_PASS='{{ rg_password }}'"
+
+  - name: decrease the threshold of threads 
+    lineinfile: dest=/etc/raingauge_rc
+      state=present
+      regexp='^PT_STALK_THRESHOLD'
+      line="PT_STALK_THRESHOLD='1'"
+
+  - name: starure Rain Gauge service is running and starts at boot
+    service: name=raingauge state=started enabled=yes 
+
+  - name: get sysbench 0.5 for CentOS 6
+    command: wget http://www.lefred.be/files/sysbench-0.5-3.el6_.x86_64.rpm
+
+  - name: install sysbench 0.5
+    command: rpm -i /home/vagrant/sysbench-0.5-3.el6_.x86_64.rpm
+
