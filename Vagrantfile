@@ -22,8 +22,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     db2.vm.hostname = "db2"
     db2.vm.network "private_network", ip: "192.168.222.13"
   end
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "site.yml"
-    ansible.sudo = true
-  end
 end
