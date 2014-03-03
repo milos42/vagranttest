@@ -33,5 +33,5 @@ run the following on each db host:
 ....wait....
 
 point your browser to:
-http://localhost:8808/RainGauge/
+  http://localhost:8808/RainGauge/
 
