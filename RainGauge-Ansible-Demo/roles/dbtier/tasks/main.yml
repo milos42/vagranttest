@@ -1,0 +1,20 @@
+  - name: install sbtest.sh script
+    template: src=templates/sbtest.sh dest=/usr/local/bin/sbtest.sh
+
+  - name: set permission for sbtest.sh
+    action: file path=/usr/local/bin/sbtest.sh owner=root group=root mode=0755
+
+  - name: Install MySQL server and other packages
+    yum: name=Percona-Server-server-55 state=present
+
+  - name: ensure MySQL is running and starts on boot
+    service: name=mysql state=started enabled=yes
+
+#mysql-python doesn't work well with mysql-5.6 on os x
+#  - name: Create Rain Gauge user with ALL privileges on ALL databases
+#    mysql_user: name=raingauge host=localhost password={{ rg_password }} priv=PROCESS,SUPER:ALL state=present
+
+  - name: Create MySQL sbtest database
+    command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `sbtest`"
+
+
