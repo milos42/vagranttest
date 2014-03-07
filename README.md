@@ -1,12 +1,5 @@
 
 
-in order to avoid ssh connection problems with Ansible add these lines to the .ssh/config
-
-```
-Host 127.0.0.1 192.168.222.?
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-```
 
 what you need
 ==============
@@ -22,7 +15,6 @@ then run the following
 ```
 cd vagrantest
 vagrant up
-ansible-playbook site.yml -i hosts
 ````
 after the playbook is finished log in to the db hosts in a separate window with:
 ```
